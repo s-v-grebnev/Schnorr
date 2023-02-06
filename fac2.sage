@@ -4,7 +4,7 @@ $sage fac2.sage N n prec trials
     :param N: the number to factor
     :param n: dimension of lattice
     :param prec: precision (integer to correct rounding errors)
-    :return: prints resulting vector t, aux vector c
+    :return: prints resulting nearest-to-short vector t, aux vector c
 """
 
 from fpylll import IntegerMatrix, SVP, LLL
@@ -16,7 +16,6 @@ def svp(B):
 
 def cvp(B, t):
 	A = IntegerMatrix.from_matrix(B)
-#	print(A)	
 	A = LLL.reduction(A, delta=.75)		# LLL штатный
 #	print(A)
 #Babai
@@ -68,13 +67,15 @@ def test_Schnorr(P, N, n, prec=10):
 		B[i, n] = sr(N*ln(P[i]))
 
 
+	print(B)
+# Find a "short" vector
 	b = svp(B)
-		
+# Reduce the vector by Babai's algorithm		
 	a = cvp(B, b)
 	print(a)
 
+"""
 	e = [b[i] / sr(N*f[i]) for i in range(n)]
-
 	u = 1
 	v = 1
 	for i in range(n):
@@ -83,8 +84,8 @@ def test_Schnorr(P, N, n, prec=10):
 			u *= P[i]^e[i]
 		if e[i] < 0:
 			v *= P[i]^(-e[i])
-
 	return is_smooth(u - v*N, P) 
+"""
 
 try:
 	N = int(sys.argv[1])
